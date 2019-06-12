@@ -7,6 +7,7 @@ POSITIONS.marker.y = 0.0
 POSITIONS.marker.z = 0.0
 POSITIONS.marker.h = 0.0
 POSITIONS.marker.r = 1.0
+POSITIONS.marker.o = 1
 
 POSITIONS.start = function () 
     if POSITIONS.marker.active then return end
@@ -83,18 +84,28 @@ Citizen.CreateThread(function ()
             end
         end
 
-        if (IsControlPressed(1, 96)) then -- NUMPAD +
+        if (IsControlPressed(1, 181)) then -- Scroll Wheel Up +
             POSITIONS.marker.r = POSITIONS.marker.r + 0.05
             Citizen.Wait(10)
         end
 
-        if (IsControlPressed(1, 97)) then --NUMPAD -
+        if (IsControlPressed(1, 180)) then --Scroll Wheel Up
             POSITIONS.marker.r = POSITIONS.marker.r - 0.05
             Citizen.Wait(10)
         end
+		
+		if (IsControlPressed(1, 314) and POSITIONS.marker.o < 43) then -- NUMPAD +
+            POSITIONS.marker.o = POSITIONS.marker.o + 1
+            Citizen.Wait(200)
+        end
 
-        if (IsControlJustReleased(1, 176)) then -- ENTER
-            local text = "{x = "..POSITIONS.marker.x..", y = "..POSITIONS.marker.y..", z = "..POSITIONS.marker.z..", h = "..POSITIONS.marker.h..", r = "..POSITIONS.marker.r.."},"
+        if (IsControlPressed(1, 315) and POSITIONS.marker.o > 1) then --NUMPAD -
+			POSITIONS.marker.o = POSITIONS.marker.o - 1
+			Citizen.Wait(200)
+        end
+
+        if (IsControlJustReleased(1, 176)) and POSITIONS.marker.active == true then -- ENTER
+            local text = "{o = "..POSITIONS.marker.o..", x = "..POSITIONS.marker.x..", y = "..POSITIONS.marker.y..", z = "..POSITIONS.marker.z..", h = "..POSITIONS.marker.h..", r = "..POSITIONS.marker.r.."},"
             subTitle(text)
 
             TriggerServerEvent("position:s:insert", text)
@@ -122,9 +133,9 @@ Citizen.CreateThread(function ()
     while true do 
         Citizen.Wait(0)
         if POSITIONS.marker.active then
-            DrawMarker(26, POSITIONS.marker.x, POSITIONS.marker.y, POSITIONS.marker.z, 0, 0, 0, 0, 0, POSITIONS.marker.h, POSITIONS.marker.r, POSITIONS.marker.r, 0.5, 0, 0, 255, 120, 0, 0, 2, 0, 0, 0, 0)
+            DrawMarker(POSITIONS.marker.o, POSITIONS.marker.x, POSITIONS.marker.y, POSITIONS.marker.z, 0, 0, 0, 0, 0, POSITIONS.marker.h, POSITIONS.marker.r, POSITIONS.marker.r, 0.5, 0, 0, 255, 120, 0, 0, 2, 0, 0, 0, 0)
             
-            local text = "{x = "..POSITIONS.marker.x..", y = "..POSITIONS.marker.y..", z = "..POSITIONS.marker.z..", h = "..POSITIONS.marker.h..", r = "..POSITIONS.marker.r.."},"
+            local text = "{o = "..POSITIONS.marker.o..", x = "..POSITIONS.marker.x..", y = "..POSITIONS.marker.y..", z = "..POSITIONS.marker.z..", h = "..POSITIONS.marker.h..", r = "..POSITIONS.marker.r.."},"
             subTitle(text)
         end
     end 
